@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8
+package com.uvg.laboratorio8.data
 
 class CharacterDb {
     private val characters: List<Character> = listOf(

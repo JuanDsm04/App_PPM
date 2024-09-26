@@ -1,6 +1,6 @@
-package com.uvg.laboratorio8.characterProfile
+package com.uvg.laboratorio8.location.locationDetails
 
-import androidx.compose.foundation.background
+import com.uvg.laboratorio8.data.LocationDb
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,20 +23,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.uvg.laboratorio8.CharacterDb
 import com.uvg.laboratorio8.ui.theme.Laboratorio8Theme
 
 @Composable
-fun CharacterProfileRoute(
+fun LocationDetailsRoute(
     id: Int,
     onNavigateBack: () -> Unit
-){
-    CharacterProfileScreen(
+) {
+    LocationDetailsScreen(
         id = id,
         onNavigateBack = onNavigateBack
     )
@@ -46,20 +40,20 @@ fun CharacterProfileRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CharacterProfileScreen(
+private fun LocationDetailsScreen(
     id: Int,
-    onNavigateBack: ()-> Unit
+    onNavigateBack: () -> Unit
 ){
-    val characterDb = CharacterDb()
-    val character = characterDb.getCharacterById(id)
+    val locationDb = LocationDb()
+    val location = locationDb.getLocationById(id)
 
     Column (
         modifier = Modifier
             .fillMaxSize()
-    ){
+    ) {
         TopAppBar(
             title = {
-                Text("Character Detail")
+                Text("Location Details")
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
@@ -82,23 +76,13 @@ private fun CharacterProfileScreen(
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            AsyncImage(
-                model = character.image,
-                contentDescription = "Image",
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondary),
-                contentScale = ContentScale.Crop
-            )
-
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = character.name, style = MaterialTheme.typography.titleLarge)
+            Text(text = location.name, style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(30.dp))
 
             Column (
                 modifier = Modifier
-                    .width(250.dp),
+                    .width(280.dp),
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ){
                 Row (
@@ -106,37 +90,36 @@ private fun CharacterProfileScreen(
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    Text(text = "Species: ")
-                    Text(text = character.species)
+                    Text(text = "ID: ")
+                    Text(text = "${location.id}")
                 }
                 Row (
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    Text(text = "Status ")
-                    Text(text = character.status)
+                    Text(text = "Type: ")
+                    Text(text = location.type)
                 }
                 Row (
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    Text(text = "Gender: ")
-                    Text(text = character.gender)
+                    Text(text = "Dimensions: ")
+                    Text(text = location.dimension)
                 }
             }
         }
-
     }
 }
 
 @Preview
 @Composable
-private fun PreviewCharacterProfileScreen(){
+private fun PreviewLocationDetailsScreen(){
     Laboratorio8Theme {
         Surface {
-            CharacterProfileScreen(id = 1, onNavigateBack = {})
+            LocationDetailsScreen(id = 1, onNavigateBack = {})
         }
     }
 }
