@@ -1,10 +1,9 @@
-package com.uvg.laboratorio8.character.characterProfile
+package com.uvg.laboratorio8.mainFlow.character.characterProfile
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,9 +25,7 @@ fun NavGraphBuilder.characterProfileScreen(
     onNavigateBack: () -> Unit
 ) {
     composable<CharacterProfileDestination> { navBackStackEntry ->
-        val destination: CharacterProfileDestination = navBackStackEntry.toRoute()
         CharacterProfileRoute(
-            id = destination.characterId,
             onNavigateBack = onNavigateBack
         )
     }

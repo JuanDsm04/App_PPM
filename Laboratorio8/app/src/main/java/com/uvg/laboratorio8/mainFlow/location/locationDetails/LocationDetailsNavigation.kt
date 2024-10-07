@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8.location.locationDetails
+package com.uvg.laboratorio8.mainFlow.location.locationDetails
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -28,7 +28,6 @@ fun NavGraphBuilder.locationDetailsScreen(
     composable<LocationDetailsDestination> { navBackStackEntry ->
         val destination: LocationDetailsDestination = navBackStackEntry.toRoute()
         LocationDetailsRoute(
-            id = destination.locationId,
             onNavigateBack = onNavigateBack
         )
     }

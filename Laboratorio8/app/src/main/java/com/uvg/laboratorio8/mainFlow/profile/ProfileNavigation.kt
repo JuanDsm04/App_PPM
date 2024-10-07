@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8.profile
+package com.uvg.laboratorio8.mainFlow.profile
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier
