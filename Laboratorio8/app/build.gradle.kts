@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.androidx.datastore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

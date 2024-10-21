@@ -27,17 +27,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uvg.laboratorio8.R
 import com.uvg.laboratorio8.ui.theme.Laboratorio8Theme
+import okhttp3.internal.platform.android.ConscryptSocketAdapter.Companion.factory
 
 @Composable
 fun ProfileRoute(
+    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory),
     onLogOutClick: () -> Unit,
     modifier: Modifier
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     ProfileScreen(
         onLogOutClick = onLogOutClick,
-        modifier = modifier
+        modifier = modifier,
+        state = state
     )
 }
 
@@ -45,7 +53,8 @@ fun ProfileRoute(
 @Composable
 private fun ProfileScreen(
     onLogOutClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: ProfileState
 ){
     Column (
         modifier = Modifier
@@ -88,7 +97,7 @@ private fun ProfileScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
                     Text(text = "Nombre: ")
-                    Text(text = "Juan Solís")
+                    Text(text = state.name ?: "N/A")
                 }
                 Row (
                     modifier = Modifier
@@ -116,10 +125,13 @@ private fun ProfileScreen(
 
 @Preview
 @Composable
-private fun PreviewProfileScreen(){
+private fun PreviewProfileScreen() {
     Laboratorio8Theme {
         Surface {
-            ProfileScreen(onLogOutClick = {})
+            ProfileScreen(
+                onLogOutClick = {},
+                state = ProfileState(name = "Juan Solís")
+            )
         }
     }
 }
