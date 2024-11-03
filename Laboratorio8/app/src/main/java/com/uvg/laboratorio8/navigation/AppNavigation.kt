@@ -6,10 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.uvg.laboratorio8.login.LoginDestination
-import com.uvg.laboratorio8.login.loginScreen
-import com.uvg.laboratorio8.mainFlow.mainNavigationGraph
-import com.uvg.laboratorio8.mainFlow.navigateToMainGraph
+import com.uvg.laboratorio8.presentation.login.LoginDestination
+import com.uvg.laboratorio8.presentation.login.loginScreen
+import com.uvg.laboratorio8.presentation.mainFlow.mainNavigationGraph
+import com.uvg.laboratorio8.presentation.mainFlow.navigateToMainGraph
 
 @Composable
 fun AppNavigation(

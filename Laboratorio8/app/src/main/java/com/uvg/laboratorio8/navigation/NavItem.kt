@@ -8,11 +8,11 @@ import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.uvg.laboratorio8.mainFlow.character.CharacterNavGraph
-import com.uvg.laboratorio8.mainFlow.character.charactersList.CharacterListDestination
-import com.uvg.laboratorio8.mainFlow.location.LocationsNavGraph
-import com.uvg.laboratorio8.mainFlow.location.locationList.LocationListDestination
-import com.uvg.laboratorio8.mainFlow.profile.ProfileDestination
+import com.uvg.laboratorio8.presentation.mainFlow.character.CharacterNavGraph
+import com.uvg.laboratorio8.presentation.mainFlow.character.charactersList.CharacterListDestination
+import com.uvg.laboratorio8.presentation.mainFlow.location.LocationsNavGraph
+import com.uvg.laboratorio8.presentation.mainFlow.location.locationList.LocationListDestination
+import com.uvg.laboratorio8.presentation.mainFlow.profile.ProfileDestination
 
 data class NavItem(
     val title: String,
