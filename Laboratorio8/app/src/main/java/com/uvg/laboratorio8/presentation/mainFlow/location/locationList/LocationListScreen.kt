@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uvg.laboratorio8.ui.theme.Laboratorio8Theme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.laboratorio8.domain.remote.util.DataError
 
 @Composable
 fun LocationListRoute(
@@ -51,7 +52,7 @@ fun LocationListRoute(
 
     LocationListScreen (
         state = state,
-        onSetError = { viewModel.setError() },
+        onSetError = { viewModel.setError(DataError.GENERIC_FAILURE) },
         onRetry = { viewModel.getLocationListData() },
         onLocationClick = onLocationClick,
         modifier = modifier
@@ -172,7 +173,7 @@ fun LocationItem(location: Location, onClick: () -> Unit) {
 private fun PreviewLocationListScreen(){
     Laboratorio8Theme {
         Surface {
-            val locationDb = LocationDb
+            val locationDb = LocationDb()
             LocationListScreen(
                 onLocationClick = { },
                 state = LocationListState(data = locationDb.getAllLocations()),

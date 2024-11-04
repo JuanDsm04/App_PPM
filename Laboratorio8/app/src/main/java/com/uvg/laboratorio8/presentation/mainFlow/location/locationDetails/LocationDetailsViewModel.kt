@@ -13,8 +13,9 @@ import kotlinx.coroutines.launch
 
 class LocationDetailsViewModel (
     savedStateHandle: SavedStateHandle
+
 ): ViewModel() {
-    private val locationDb = LocationDb
+    private val locationDb = LocationDb()
     private val locationDetails = savedStateHandle.toRoute<LocationDetailsDestination>()
     private val _uiState: MutableStateFlow<LocationDetailsState> = MutableStateFlow(LocationDetailsState())
     val uiState = _uiState.asStateFlow()

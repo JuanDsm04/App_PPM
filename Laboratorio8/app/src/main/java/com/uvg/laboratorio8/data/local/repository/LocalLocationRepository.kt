@@ -1,38 +1,56 @@
 package com.uvg.laboratorio8.data.local.repository
 
 import com.uvg.laboratorio8.data.local.dao.LocationDao
-import com.uvg.laboratorio8.data.local.entity.mapToEntity
-import com.uvg.laboratorio8.data.local.entity.mapToModel
 import com.uvg.laboratorio8.data.model.Location
-import com.uvg.laboratorio8.data.local.source.LocationDb
+import com.uvg.laboratorio8.data.remote.dto.mapToEntity
+import com.uvg.laboratorio8.domain.remote.RickAndMortyAPI
+import com.uvg.laboratorio8.domain.remote.util.DataError
+import com.uvg.laboratorio8.domain.remote.util.Result
 import com.uvg.laboratorio8.domain.repository.LocationRepository
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
-import kotlin.coroutines.coroutineContext
+import com.uvg.laboratorio8.data.remote.dto.mapToModel
+import com.uvg.laboratorio8.data.local.entity.mapToModel
 
 class LocalLocationRepository(
-    private val locationDao: LocationDao
+    private val locationDao: LocationDao,
+    private val rickAndMortyAPI: RickAndMortyAPI
 
-) {
-    suspend fun getAllLocations(): List<Location> {
-        val localLocations = locationDao.getAllLocations()
-        return localLocations.map { location ->
-            location.mapToModel()
-        }
-    }
+): LocationRepository {
+    override suspend fun getAllLocations(): Result<List<Location>, DataError> {
 
-    fun getLocationByID(id: Int): Location {
-        return locationDao.getLocation(id)
-    }
+        when (val result = rickAndMortyAPI.getAllLocations()) {
+            is Result.Error -> {
+                val localLocations = locationDao.getAllLocations()
 
-    suspend fun insertAllLocations() {
-        val locations = locationDao.getAllLocations()
-        if (locations.isEmpty()) {
-            val remoteLocations = LocationDb.getAllLocations()
-            val localLocations = remoteLocations.map { localLocation ->
-                localLocation.mapToEntity()
+                return if (localLocations.isEmpty()) {
+                    if(result.error == DataError.NO_INTERNET) {
+                        Result.Error(
+                            DataError.NO_INTERNET
+                        )
+                    } else {
+                        Result.Error(DataError.GENERIC_FAILURE)
+                    }
+
+                } else {
+                    Result.Success (
+                        localLocations.map { it.mapToModel() }
+                    )
+                }
             }
-            locationDao.insertAll(localLocations)
+
+            is Result.Success -> {
+                val remoteLocations = result.data.results
+
+                locationDao.insertAll(
+                    remoteLocations.map { it.mapToEntity() }
+                )
+                return Result.Success(
+                    remoteLocations.map { it.mapToModel() }
+                )
+            }
         }
+    }
+
+    override suspend fun getLocationByID(id: Int): Location {
+        return locationDao.getLocation(id)
     }
 }

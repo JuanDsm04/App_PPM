@@ -13,8 +13,9 @@ import kotlinx.coroutines.launch
 
 class CharacterProfileViewModel (
     savedStateHandle: SavedStateHandle
+
 ): ViewModel() {
-    private val characterDb = CharacterDb
+    private val characterDb = CharacterDb()
     private val characterProfile = savedStateHandle.toRoute<CharacterProfileDestination>()
     private val _uiState: MutableStateFlow<CharacterProfileState> = MutableStateFlow(CharacterProfileState())
     val uiState = _uiState.asStateFlow()

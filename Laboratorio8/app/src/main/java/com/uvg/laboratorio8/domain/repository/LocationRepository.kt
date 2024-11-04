@@ -1,9 +1,10 @@
 package com.uvg.laboratorio8.domain.repository
 
 import com.uvg.laboratorio8.data.model.Location
+import com.uvg.laboratorio8.domain.remote.util.DataError
+import com.uvg.laboratorio8.domain.remote.util.Result
 
 interface LocationRepository {
-    suspend fun initialSync(): Boolean
-    suspend fun getLocations(): List<Location>
-    suspend fun getLocationById(id: Int): Location
+    suspend fun getAllLocations(): Result<List<Location>, DataError>
+    suspend fun getLocationByID(id: Int): Location
 }

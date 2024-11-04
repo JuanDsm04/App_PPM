@@ -19,19 +19,19 @@ class DataStoreUserPrefs (
 
     override suspend fun logIn() {
         dataStore.edit { preferences ->
-            preferences[isAuthenticatedKey] = true
+            preferences[ isAuthenticatedKey ] =true
         }
     }
 
     override suspend fun logOut() {
         dataStore.edit { preferences ->
-            preferences[isAuthenticatedKey] = false
+            preferences[ isAuthenticatedKey ] = false
         }
     }
 
-    override suspend fun setUsername(username: String){
+    override suspend fun setUsername( username: String ) {
         dataStore.edit { preferences ->
-            preferences[usernameKey] = username
+            preferences[usernameKey]= username
         }
     }
 
@@ -43,7 +43,7 @@ class DataStoreUserPrefs (
 
         preferencesKey?.let {
             val preferences = dataStore.data.first()
-            return preferences[preferencesKey]
+            return preferences[ preferencesKey ]
         }
 
         return null

@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.uvg.laboratorio8.data.model.Character
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.laboratorio8.domain.remote.util.DataError
 
 @Composable
 fun CharacterListRoute(
@@ -56,7 +57,7 @@ fun CharacterListRoute(
 
     CharacterListScreen (
         state = state,
-        onSetError = { viewModel.setError() },
+        onSetError = { viewModel.setError(DataError.GENERIC_FAILURE) },
         onRetry = { viewModel.getCharacterListData() },
         onCharacterClick = onCharacterClick,
         modifier = modifier
@@ -183,7 +184,7 @@ fun CharacterItem(character: Character, onClick: () -> Unit) {
 private fun PreviewCharacterListScreen(){
     Laboratorio8Theme {
         Surface {
-            val characterDb = CharacterDb
+            val characterDb = CharacterDb()
             CharacterListScreen(
                 onCharacterClick = { },
                 state = CharactersListState(data = characterDb.getAllCharacters()),

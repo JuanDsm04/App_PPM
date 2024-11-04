@@ -2,7 +2,7 @@ package com.uvg.laboratorio8.data.local.source
 
 import com.uvg.laboratorio8.data.model.Location
 
-object LocationDb {
+class LocationDb {
     private val locations: List<Location> = listOf(
         Location(1, "Earth (C-137)", "Planet", "Dimension C-137"),
         Location(2, "Abadango", "Cluster", "unknown"),

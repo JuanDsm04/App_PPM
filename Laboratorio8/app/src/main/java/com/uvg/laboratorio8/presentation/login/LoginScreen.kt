@@ -21,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uvg.laboratorio8.R
 import com.uvg.laboratorio8.ui.theme.Laboratorio8Theme
+import kotlin.math.sin
 
 @Composable
 fun LoginRoute(
@@ -38,10 +42,15 @@ fun LoginRoute(
     viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 ){
     val state by viewModel.state.collectAsState()
+    var errorMessage by remember { mutableStateOf("") }
+
     LoginScreen(
         loading = state.loading,
         onLoginClick = {
-            if (state.username.isNotBlank()) {
+            if (state.username.isBlank()) {
+                errorMessage = "Por favor, ingrese su nombre."
+            } else {
+                errorMessage = ""
                 viewModel.saveUsername()
                 onLoginClick()
             }
@@ -49,7 +58,9 @@ fun LoginRoute(
         username = state.username,
         onUsernameChange = {
             viewModel.onUsernameChange(it)
+            errorMessage = ""
         },
+        errorMessage = errorMessage,
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -60,7 +71,8 @@ private fun LoginScreen(
     loading: Boolean,
     username: String,
     onLoginClick: () -> Unit,
-    onUsernameChange: (String) -> Unit
+    onUsernameChange: (String) -> Unit,
+    errorMessage: String
 ){
     Column (
         modifier = Modifier
@@ -85,8 +97,16 @@ private fun LoginScreen(
                 onValueChange = onUsernameChange,
                 placeholder = {
                     Text(text = "Nombre")
-                }
+                },
+                singleLine = true
             )
+            if (errorMessage.isNotBlank()) {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(20.dp))
             TextButton(
                 onClick = onLoginClick,
@@ -119,7 +139,8 @@ private fun PreviewLoginScreen(){
                 onLoginClick = {},
                 username = "",
                 onUsernameChange = {},
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                errorMessage = ""
             )
         }
     }

@@ -6,9 +6,13 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.uvg.laboratorio8.data.local.dao.LocationDao
 import com.uvg.laboratorio8.data.local.repository.LocalLocationRepository
+import com.uvg.laboratorio8.data.remote.KtorRickAndMortyAPI
 import com.uvg.laboratorio8.di.AppDependencies
+import com.uvg.laboratorio8.domain.remote.util.DataError
+import com.uvg.laboratorio8.domain.remote.util.onError
+import com.uvg.laboratorio8.domain.remote.util.onSuccess
+import com.uvg.laboratorio8.domain.repository.LocationRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,16 +20,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LocationListViewModel (
-    private val locationDao: LocationDao
+    private val locationRepository: LocationRepository
+
 ): ViewModel() {
-    private val localLocationRepository = LocalLocationRepository(locationDao)
     private val _uiState: MutableStateFlow<LocationListState> = MutableStateFlow(LocationListState())
     val uiState = _uiState.asStateFlow()
 
+    init {
+        getLocationListData()
+    }
+
     fun getLocationListData(){
         viewModelScope.launch {
-            localLocationRepository.insertAllLocations()
-
             _uiState.update { state ->
                 state.copy(
                     isLoading = true,
@@ -34,17 +40,20 @@ class LocationListViewModel (
             }
 
             delay(4000)
-
-            _uiState.update { state ->
-                state.copy(
-                    isLoading = false,
-                    data = localLocationRepository.getAllLocations()
-                )
-            }
+            locationRepository.getAllLocations()
+                .onSuccess { locations ->
+                    _uiState.update { state ->
+                        state.copy(
+                            data = locations,
+                            isLoading = false
+                        )
+                    }
+                }
+                .onError { error -> setError(error) }
         }
     }
 
-    fun setError() {
+    fun setError(error: DataError) {
         viewModelScope.launch {
             _uiState.update { state ->
                 state.copy(
@@ -60,8 +69,12 @@ class LocationListViewModel (
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY])
                 val db = AppDependencies.provideDatabase(application)
+                val api = KtorRickAndMortyAPI(AppDependencies.provideHttpClient())
                 LocationListViewModel(
-                    locationDao = db.locationDao()
+                    locationRepository = LocalLocationRepository(
+                        rickAndMortyAPI = api,
+                        locationDao = db.locationDao()
+                    )
                 )
             }
         }
